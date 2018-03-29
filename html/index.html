@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>五格八十一命理取名法</title>
+    <script src="res/js/angular.min.js"></script>
+    <link href="res/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body ng-app="advisorApp">
+<div class="container">
+
+    <div class="page-header" id="banner">
+        <div class="row">
+            <div class="col-lg-8 col-md-7 col-sm-6">
+                <h1>五格八十一命理取名法</h1>
+
+                <p class="lead text-danger">!!!请注意 本应用仅适合单姓复名，如：马化腾</p>
+            </div>
+            <div class="col-lg-4 col-md-5 col-sm-6">
+                <div class="sponsor">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bs-docs-section" ng-controller="NameAdvisor">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <form class="form-inline" name="xForm" ng-submit="btnClick(item, $event)" >
+                    <div class="form-group">
+                        <label>姓</label>
+                        <input type="text" ng-maxlength="1" maxlength="1" class="form-control" style="width:40px"
+                               name="fName" ng-model="fName" required/>
+                    </div>
+                    <div class="form-group">
+                        <label title="姓的笔画数，以繁体字为准">笔画数</label>
+                        <input type="text" maxlength="2" class="form-control" style="width:50px" ng-model="fNameNumber"
+                               id="fNameNumber" required/>
+                    </div>
+                    <div class="form-group">
+                        <label>性别：</label>
+                        <select class="form-control" id="gender" ng-model="gender" required>
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>第二个字补</label>
+                        <select class="form-control" id="bu2" ng-model="bu2" required>
+                            <option value="金">金</option>
+                            <option value="木">木</option>
+                            <option value="水">水</option>
+                            <option value="火">火</option>
+                            <option value="土">土</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>第三个字补：</label>
+                        <select class="form-control" id="bu3" ng-model="bu3" required>
+                            <option value="金">金</option>
+                            <option value="木">木</option>
+                            <option value="水">水</option>
+                            <option value="火">火</option>
+                            <option value="土">土</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-default" type="button" ng-click="btnClick(item, $event)">开始取名</button>
+                    <a href="about.html">这里有一些原理和参考网址</a>
+                </form>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-lg-2">
+
+            </div>
+
+            <div class="col-lg-5">
+                <h4 style="margin:30px">第二个字的选择</h4>
+            </div>
+            <div class="col-lg-5">
+                <h4 style="margin:30px">第三个字的选择</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2">
+                <div style="font-size: 24px;text-align: center" class="well">
+                    {{fName}}</div>
+            </div>
+            <div class="col-lg-10">
+                <div ng-repeat="group in data.nameGroups" class="well">
+                    <strong>{{group.label}}</strong>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <span ng-repeat="z2 in group.zi2">
+                                {{z2}}
+                            </span>
+                        </div>
+                        <div class="col-lg-6">
+                            <span ng-repeat="z3 in group.zi3">
+                                {{z3}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    angular.module("advisorApp", [])
+            .controller("NameAdvisor", function ($scope, $http) {
+                $scope.data = {};
+                $scope.btnClick = function (item, event) {
+
+                    if(!$scope.xForm.$valid){
+                        alert("所有的项目都必须填写，其中笔画请输入整数。");
+                        return;
+                    }
+                    var responsePromise = $http.get("/advice?fNameNumber=" + $scope.fNameNumber + "&gender=" + $scope.gender
+                    + "&bu2=" + $scope.bu2 + "&bu3=" + $scope.bu3);
+                    responsePromise.success(function (data, status, headers, config) {
+                        $scope.data.nameGroups = data;
+                    });
+                    responsePromise.error(function (data, status, headers, config) {
+                        alert("AJAX failed!");
+                    });
+
+                }
+            });
+
+
+</script>
+</body>
+</html>
