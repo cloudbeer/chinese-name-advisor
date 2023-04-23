@@ -3,7 +3,7 @@
   "description": "通过五格八十一命理给娃取名，通过本系统取的名，会得高分",
   "version": "0.0.1",
   "dependencies": {
-    "koa": "^0.14.0",
+    "koa": "^2.14.2",
     "koa-route": "^2.4.0",
     "koa-static": "^2.0.0"
   }
